@@ -1,0 +1,82 @@
+﻿@page
+@model ToDoWebApp.Pages.ToDoScreenModel
+@{
+}
+
+<div class="todo_page">
+    <div>
+        <h1>To Do List</h1>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#taskModal" onclick="clearModal()">
+            <i class="fas fa-plus"></i> <!-- Icono de Font Awesome para añadir -->
+        </button>
+    </div>
+    <div class="card_list">
+        @foreach (var tarea in Model.Tareas)
+        {
+            <div class="card">
+                <h4>
+                    @tarea.title
+                    <i class="fas fa-edit edit-icon" data-toggle="modal" data-target="#taskModal" onclick="editTask(@tarea.Id, '@tarea.title', '@tarea.description')"></i>
+                    <i style="float:unset" class="fas fa-trash delete-icon" data-toggle="modal" data-target="#deleteModal-@tarea.Id"></i>
+                </h4>
+                <hr />
+                <p>@tarea.description</p>
+            </div>
+
+            <!-- Modal de eliminación -->
+            <div class="modal fade" id="deleteModal-@tarea.Id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Confirmar Eliminación</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            ¿Estás seguro de que deseas eliminar esta tarea?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            <form method="post" asp-page-handler="Delete" asp-route-id="@tarea.Id">
+                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Modal para crear/editar tarea -->
+    <div class="modal fade" id="taskModal" tabindex="-1" role="dialog" aria-labelledby="taskModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="taskModalLabel">Crear Nueva Tarea</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="post" id="taskForm">
+                    <div class="modal-body">
+                        <input type="hidden" id="taskId" name="taskId">
+                        <div class="form-group">
+                            <label for="titulo">Título:</label>
+                            <input type="text" class="form-control" id="titulo" name="titulo" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="descripcion">Descripción:</label>
+                            <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" id="submitButton">Crear</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
